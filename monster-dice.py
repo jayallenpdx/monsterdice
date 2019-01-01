@@ -21,34 +21,31 @@ old_roll = []
 while len(bucket) > 2 and hits < 3:
     current_roll = []
     sample_size = 3 - len(old_roll)
+    print("old roll: ", len(old_roll), " sample_size: ", sample_size)
     roll = random.sample(bucket, sample_size)
     current_roll = roll + old_roll
+    old_roll = []
     print("current roll: ", current_roll)
 
     for dice in current_roll:
         dice_result = random.choice(dice)
+        print("dice: ",dice_result)
+        bucket.remove(dice)
         if dice_result == 'hit':
             hits += 1
-            bucket.remove(dice)
         if dice_result == '2hit':
             hits += 2
-            bucket.remove(dice)
         if dice_result== 'run':
             runs += 1
             old_roll.append(dice)
-            bucket.remove(dice)
         if dice_result == 'bra':
             bras += 1
-            bucket.remove(dice)
         if dice_result == '2bra':
             bras += 2
-            bucket.remove(dice)
         if dice_result == 'helm':
             bras -= 1
-            bucket.remove(dice)
         if dice_result == 'ebar':
             ebar += 1
-            bucket.remove(dice)
 
     rolls += 1
     print("Rolls: ", rolls, " Hits: ", hits, " Brains: ", bras)
