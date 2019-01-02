@@ -13,7 +13,7 @@ santa = ['hit', '2bra', 'helm', 'bra', 'ebar', 'run']
 
 
 
-def turn(number,hit_stop):
+def turn(number,hit_stop,brain_stop):
     hits = 0
     bras = 0
     rolls = 0
@@ -59,12 +59,41 @@ def turn(number,hit_stop):
         rolls += 1
         if verbose:
            print("#Number: ", number, " Rolls: ", rolls, " Hits: ", hits, " Brains: ", bras)
+        if brain_stop and bras >= brain_stop:
+           print("Hit the brain stop: ",brain_stop,bras)
+           break
     return(number,rolls,hits,bras)
 
-results = []
 
-for x in range(1, 1000000):
-    results.append(turn(x,2))
+def scenario_xy(target_score):
+    player1_score = 0
+    player2_score = 0
 
-df = pd.DataFrame(results, columns=['number', 'rolls', 'hits', 'brains'])
-print(df.describe())
+    while player1_score < target_score and player2_score < target_score:
+      p1_results=turn(1,2,0)
+      if p1_results[2] < 3:
+         player1_score += p1_results[3]
+
+      p2_results=turn(1,3,5)
+      if p2_results[2] < 3:
+         player2_score += p2_results[3]
+
+    print("Player1: ", player1_score, " Player2: ", player2_score)
+    return(player1_score,player2_score)
+      
+p1_wins = 0
+p2_wins = 0
+ties = 0
+for x in range(1,100):
+   p1,p2 = scenario_xy(20)
+   if p1 > p2:
+      p1_wins += 1
+   if p2 > p1:
+      p2_wins += 1
+   if p1 == p2:
+      ties +=1
+print("Player1 wins: ", p1_wins, "Player2 wins: ", p2_wins, " Ties: ", ties)
+
+
+#df = pd.DataFrame(results, columns=['number', 'rolls', 'hits', 'brains'])
+#print(df.describe())
