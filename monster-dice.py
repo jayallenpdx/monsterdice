@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import random
+import pandas as pd
+
+verbose = 0
 
 red = ['hit', 'hit', 'hit', 'bra', 'run', 'run']
 yellow = ['hit', 'hit', 'bra', 'bra', 'run', 'run']
@@ -10,7 +13,7 @@ santa = ['hit', '2bra', 'helm', 'bra', 'ebar', 'run']
 
 
 
-def turn(number):
+def turn(number,hit_stop):
     hits = 0
     bras = 0
     rolls = 0
@@ -20,20 +23,23 @@ def turn(number):
     bucket = [red, red, red, green, green, green, green, \
        green, green, yellow, yellow, yellow, hero, heroin, santa]
 
-    while len(bucket) > 2 and hits < 3:
+    while len(bucket) > 2 and hits < hit_stop:
         current_roll = []
         sample_size = 3 - len(old_roll)
-        print("#old roll: ", len(old_roll), " sample_size: ", sample_size)
+        if verbose:
+           print("#old roll: ", len(old_roll), " sample_size: ", sample_size)
         roll = random.sample(bucket, sample_size)
         for item in roll:
             bucket.remove(item)
         current_roll = roll + old_roll
         old_roll = []
-        print("#current roll: ", current_roll)
+        if verbose:
+           print("#current roll: ", current_roll)
 
         for dice in current_roll:
             dice_result = random.choice(dice)
-            print("#dice: ",dice_result)
+            if verbose:
+                print("#dice: ",dice_result)
             if dice_result == 'hit':
                 hits += 1
             if dice_result == '2hit':
@@ -51,13 +57,14 @@ def turn(number):
                 ebar += 1
 
         rolls += 1
-        print("#Number: ", number, " Rolls: ", rolls, " Hits: ", hits, " Brains: ", bras)
+        if verbose:
+           print("#Number: ", number, " Rolls: ", rolls, " Hits: ", hits, " Brains: ", bras)
     return(number,rolls,hits,bras)
 
 results = []
 
-for x in range(1, 10000):
-    results.append(turn(x))
+for x in range(1, 1000000):
+    results.append(turn(x,2))
 
-for result in results:
-    print(result)
+df = pd.DataFrame(results, columns=['number', 'rolls', 'hits', 'brains'])
+print(df.describe())
