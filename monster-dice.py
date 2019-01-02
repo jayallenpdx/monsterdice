@@ -46,7 +46,10 @@ def turn(number,hit_stop,brain_stop):
                 hits += 2
             if dice_result== 'run':
                 runs += 1
-                old_roll.append(dice)
+                if ebar:
+                   bras += 1 
+                else:
+                   old_roll.append(dice)
             if dice_result == 'bra':
                 bras += 1
             if dice_result == '2bra':
@@ -74,7 +77,7 @@ def scenario_xy(target_score):
       if p1_results[2] < 3:
          player1_score += p1_results[3]
 
-      p2_results=turn(1,3,5)
+      p2_results=turn(1,2,8)
       if p2_results[2] < 3:
          player2_score += p2_results[3]
 
@@ -84,7 +87,7 @@ def scenario_xy(target_score):
 p1_wins = 0
 p2_wins = 0
 ties = 0
-for x in range(1,100):
+for x in range(1,1000):
    p1,p2 = scenario_xy(20)
    if p1 > p2:
       p1_wins += 1
